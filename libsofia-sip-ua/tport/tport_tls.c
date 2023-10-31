@@ -554,6 +554,14 @@ tls_t *tls_init_master(tls_issues_t *ti)
   return tls;
 }
 
+void tls_set_srvname(tls_t *tls, char const *s)
+{
+  int res = SSL_set_tlsext_host_name(tls->con, s);
+  SU_DEBUG_9(("%s(%p): SSL_set_tlsext_hostname(%s) = %d\n",
+              __func__, (void*)tls,
+              s, res));
+}
+
 tls_t *tls_init_secondary(tls_t *master, int sock, int accept)
 {
   tls_t *tls = tls_create(tls_slave);

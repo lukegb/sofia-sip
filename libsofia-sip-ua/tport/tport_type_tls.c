@@ -678,6 +678,13 @@ tport_t *tport_tls_connect(tport_primary_t *pri,
   if (tport_setname(self, tpn->tpn_proto, ai, tpn->tpn_canon) == -1)
     goto sys_error;
 
+  tport_tls_t *tlstp = (tport_tls_t *)self;
+  if (tpn->tpn_canon && strcmp(tpn->tpn_canon, "*")) {
+    SU_DEBUG_5(("%s(%p): noting servername %s\n",
+                __func__, (void *)self, tpn->tpn_canon));
+    tls_set_srvname(tlstp->tlstp_context, tpn->tpn_canon);
+  }
+
   what = "tport_register_secondary";
   if (tport_register_secondary(self, tls_connect, events) == -1)
     goto sys_error;
